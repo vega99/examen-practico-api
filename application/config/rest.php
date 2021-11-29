@@ -325,7 +325,7 @@ $config['rest_keys_table'] = 'tkeys';
 |
 */
 $config['rest_enable_keys'] = TRUE;
-$config['static_keys'] =  array('kEy$sw14Almacen');
+$config['static_keys'] =  array('kEy$al26Questions');
 
 /*
 |--------------------------------------------------------------------------
@@ -378,7 +378,7 @@ $config['rest_key_length'] = 40;
 | 2012/06/12. See RFC 6648 specification for more details
 |
 */
-$config['rest_key_name'] = 'ALMACEN-API-KEY';
+  $config['rest_key_name'] = 'QUESTIONS-API-KEY';
 
 /*
 |--------------------------------------------------------------------------
@@ -563,7 +563,7 @@ $config['allowed_cors_headers'] = [
   'Content-Type',
   'Accept',
   'Access-Control-Request-Method',
-  'ALMACEN-API-KEY',
+  'QUESTIONS-API-KEY',
 ];
 
 /*

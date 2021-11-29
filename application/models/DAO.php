@@ -96,72 +96,23 @@ class DAO extends CI_Model {
     	return $response;
     }
 
-    function login($email,$password, $app = "Web"){
-        $this->db->where('email_user', $email);
-        $user_exists = $this->db->get('tb_users')->row();
+    function login($email,$password){
+        $this->db->where('email', $email);
+        $user_exists = $this->db->get('users')->row();
         if($user_exists){
             $this->load->library('bcrypt');
-            if($this->bcrypt->check_password($password, $user_exists->password_user)){
-                $this->db->where('id_person', $user_exists->user_person);
-                $person_exists = $this->db->get('tb_persons')->row();
-                if($person_exists){
-                    $has_permission = TRUE;
-                    if($app =='Web'){
-                        if($person_exists->role_person != "Almacenista"){
-                            $has_permission = FALSE;
-                            $response = array(
-                                "status" => "error",
-                                "message" => "Tu acceso esta restringido a esta aplicación, contacta al administrador",
-                                "validations" => array(),
-                                "data" => null
-                            );
-                        }
-                    }else if($app == "mobile"){
-                        $roles_permitted = array('Personal académico/administrativo','Estudiante');
-                        if(!in_array($person_exists->role_person, $roles_permitted)){
-                            $has_permission = FALSE;
-                            $response = array(
-                                "status" => "error",
-                                "message" => "Tu acceso esta restringido a esta aplicación, contacta al administrador",
-                                "validations" => array(),
-                                "data" => null
-                            );
-                        }
-                    }else{
-                        $has_permission = FALSE;
-                        $response = array(
-                            "status" => "error",
-                            "message" => "Tu acceso esta restringido a esta aplicación, contacta al administrador",
-                            "validations" => array(),
-                            "data" => null
-                        );
-                    }
-
-                    if($has_permission){
-                        $response = array(
-                            "status" => "success",
-                            "message" => "Auntenticación Correctamente",
-                            "validations" => array(),
-                            "data" => array(
-                                "user_key" => $user_exists->id_user,
-                                "user_email" => $user_exists->email_user,
-                                "user_fullname"=> $person_exists->name_person.' '.$person_exists->lastname_person,
-                                "user_genre" => $person_exists->gender_person,
-                                "user_indentifier" => $person_exists->identifier_person,
-                                "user_phone" => $person_exists->phone_person,
-                                "user_role" => $person_exists->role_person
-                            )
-                        );
-                    }
-                }else{
-                    $response = array(
-                        "status" => "error",
-                        "message" => "La Informacion ingresada es incorrecta, contacta al administrador",
-                        "validations" => array(),
-                        "data" => null
-                    );
-                }
-
+            if($this->bcrypt->check_password($password, $user_exists->password)){
+                  $response = array(
+                      "status" => "success",
+                      "message" => "Auntenticación Correctamente",
+                      "validations" => array(),
+                      "data" => array(
+                          "user_key" => $user_exists->id,
+                          "user_email" => $user_exists->email,
+                          "user_fullname"=> $user_exists->name.' '.$user_exists->lastname,
+                          "token" => $this->bcrypt->hash_password($user_exists->password)
+                      )
+                  );
             }else{
                 $response = array(
                     "status" => "error",
